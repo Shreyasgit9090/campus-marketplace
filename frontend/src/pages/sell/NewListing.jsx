@@ -13,11 +13,6 @@ import PricePreview from '../../components/sell/PricePreview';
 import * as itemsApi from '../../api/items';
 import useDebouncedValue from '../../hooks/useDebouncedValue';
 
-const SELL_NAV = [
-  { to: '/sell', label: 'My Listings', end: true },
-  { to: '/sell/new', label: 'List an item' },
-];
-
 export default function NewListing() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -81,7 +76,7 @@ export default function NewListing() {
   };
 
   return (
-    <AppLayout navLinks={SELL_NAV}>
+    <AppLayout>
       <button
         onClick={() => navigate('/sell')}
         className="mb-4 flex items-center gap-1 text-sm text-neutral-500 hover:text-neutral-700"

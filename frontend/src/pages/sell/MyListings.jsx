@@ -9,11 +9,6 @@ import ListingCard from '../../components/sell/ListingCard';
 import * as itemsApi from '../../api/items';
 import * as ordersApi from '../../api/orders';
 
-const SELL_NAV = [
-  { to: '/sell', label: 'My Listings', end: true },
-  { to: '/sell/new', label: 'List an item' },
-];
-
 export default function MyListings() {
   const [items, setItems] = useState(null);
   const [activeOrderByItem, setActiveOrderByItem] = useState({});
@@ -33,7 +28,7 @@ export default function MyListings() {
   }, [load]);
 
   return (
-    <AppLayout navLinks={SELL_NAV}>
+    <AppLayout>
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-neutral-900">My Listings</h1>

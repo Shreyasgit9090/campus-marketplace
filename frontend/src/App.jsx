@@ -6,6 +6,14 @@ import Landing from './pages/Landing'
 import RoleSelect from './pages/RoleSelect'
 import MyListings from './pages/sell/MyListings'
 import NewListing from './pages/sell/NewListing'
+import BuyHome from './pages/buy/BuyHome'
+import ItemDetail from './pages/buy/ItemDetail'
+import MyOrders from './pages/buy/MyOrders'
+import OrderDetail from './pages/buy/OrderDetail'
+
+function Protected({ children }) {
+  return <ProtectedRoute>{children}</ProtectedRoute>
+}
 
 export default function App() {
   const { booting } = useAuth()
@@ -14,30 +22,17 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
-      <Route
-        path="/role"
-        element={
-          <ProtectedRoute>
-            <RoleSelect />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/sell"
-        element={
-          <ProtectedRoute>
-            <MyListings />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/sell/new"
-        element={
-          <ProtectedRoute>
-            <NewListing />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/role" element={<Protected><RoleSelect /></Protected>} />
+
+      <Route path="/sell" element={<Protected><MyListings /></Protected>} />
+      <Route path="/sell/new" element={<Protected><NewListing /></Protected>} />
+
+      <Route path="/buy" element={<Protected><BuyHome /></Protected>} />
+      <Route path="/buy/:id" element={<Protected><ItemDetail /></Protected>} />
+
+      <Route path="/orders" element={<Protected><MyOrders /></Protected>} />
+      <Route path="/orders/:id" element={<Protected><OrderDetail /></Protected>} />
+
       <Route path="*" element={<Landing />} />
     </Routes>
   )
