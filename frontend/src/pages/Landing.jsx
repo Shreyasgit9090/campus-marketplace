@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 export default function Landing() {
   const { user } = useAuth();
-  if (user) return <Navigate to="/welcome" replace />;
+  if (user) return <Navigate to="/role" replace />;
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">

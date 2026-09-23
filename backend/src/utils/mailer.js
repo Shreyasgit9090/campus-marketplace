@@ -8,9 +8,10 @@ function getTransporter() {
   if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) return null;
 
   transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: Number(process.env.SMTP_PORT || 587),
-    secure: false,
+    secure: false, // port 587 uses STARTTLS, not implicit TLS (that's port 465/secure:true)
+    requireTLS: true, // refuse to send over an unencrypted connection
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASSWORD },
   });
   return transporter;
@@ -29,7 +30,17 @@ async function sendMail({ to, subject, text }) {
     return;
   }
 
-  await t.sendMail({ from: process.env.SMTP_FROM, to, subject, text });
+  try {
+    await t.sendMail({ from: process.env.SMTP_FROM, to, subject, text });
+  } catch (err) {
+    if (err.code === 'EAUTH') {
+      console.error(
+        '[mailer] Gmail rejected the login. SMTP_PASSWORD must be a 16-character Gmail App Password ' +
+          '(Google Account -> Security -> 2-Step Verification -> App passwords), not your regular password.'
+      );
+    }
+    throw err;
+  }
 }
 
 async function sendOtpEmail(to, code, purpose) {

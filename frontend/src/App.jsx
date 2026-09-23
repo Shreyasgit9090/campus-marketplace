@@ -3,7 +3,9 @@ import { useAuth } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Spinner from './components/ui/Spinner'
 import Landing from './pages/Landing'
-import Welcome from './pages/Welcome'
+import RoleSelect from './pages/RoleSelect'
+import MyListings from './pages/sell/MyListings'
+import NewListing from './pages/sell/NewListing'
 
 export default function App() {
   const { booting } = useAuth()
@@ -13,10 +15,26 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route
-        path="/welcome"
+        path="/role"
         element={
           <ProtectedRoute>
-            <Welcome />
+            <RoleSelect />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/sell"
+        element={
+          <ProtectedRoute>
+            <MyListings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/sell/new"
+        element={
+          <ProtectedRoute>
+            <NewListing />
           </ProtectedRoute>
         }
       />

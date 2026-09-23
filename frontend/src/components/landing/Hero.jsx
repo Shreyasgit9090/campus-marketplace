@@ -1,11 +1,14 @@
 import { motion } from 'framer-motion';
 import { Calculator, BookOpen, Shirt, NotebookPen, ShieldCheck, Clock, Handshake, Sparkles } from 'lucide-react';
 
+// Anchored to the four corners with fixed offsets (not percentages) so
+// spacing stays constant — and non-overlapping — regardless of pane height,
+// instead of drifting together on shorter viewports.
 const floatIcons = [
-  { Icon: Calculator, top: '12%', left: '8%', delay: 0 },
-  { Icon: BookOpen, top: '62%', left: '4%', delay: 0.4 },
-  { Icon: Shirt, top: '20%', left: '82%', delay: 0.8 },
-  { Icon: NotebookPen, top: '68%', left: '80%', delay: 1.2 },
+  { Icon: Calculator, position: 'top-16 left-10', delay: 0 },
+  { Icon: BookOpen, position: 'bottom-28 left-8', delay: 0.4 },
+  { Icon: Shirt, position: 'top-28 right-10', delay: 0.8 },
+  { Icon: NotebookPen, position: 'bottom-16 right-14', delay: 1.2 },
 ];
 
 const features = [
@@ -32,7 +35,7 @@ export default function Hero() {
 
       {/* floating category icons — decorative, hidden on small screens to avoid clutter */}
       <div className="pointer-events-none absolute inset-0 hidden lg:block">
-        {floatIcons.map(({ Icon, top, left, delay }, i) => (
+        {floatIcons.map(({ Icon, position, delay }, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, scale: 0.8 }}
@@ -42,8 +45,7 @@ export default function Hero() {
               scale: { duration: 0.6, delay: 0.5 + delay },
               y: { duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1 + delay },
             }}
-            style={{ top, left }}
-            className="absolute flex size-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm"
+            className={`absolute flex size-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm ${position}`}
           >
             <Icon className="size-6 text-accent-300" />
           </motion.div>
