@@ -200,8 +200,47 @@ const updateItem = asyncHandler(async (req, res) => {
     ]
   );
 
+  // Image diff: keepImages (JSON array of file_path strings to retain) tells
+  // us what the client wants gone; anything uploaded in this request is
+  // appended after whatever's kept. Omitting keepImages entirely means
+  // "don't touch images" (keeps every existing one).
+  const { keepImages } = req.body;
+  if (keepImages !== undefined) {
+    let keepSet;
+    try {
+      keepSet = new Set(JSON.parse(keepImages));
+    } catch {
+      throw new AppError(400, 'keepImages must be a JSON array of image paths');
+    }
+
+    const [existingImages] = await pool.query(
+      'SELECT id, file_path FROM item_images WHERE item_id = ? ORDER BY sort_order',
+      [item.id]
+    );
+    const toDelete = existingImages.filter((img) => !keepSet.has(img.file_path));
+
+    if (toDelete.length > 0) {
+      await pool.query('DELETE FROM item_images WHERE id IN (?)', [toDelete.map((i) => i.id)]);
+      for (const img of toDelete) {
+        const abs = path.join(__dirname, '..', '..', img.file_path.replace(/^\/uploads/, 'uploads'));
+        fs.unlink(abs, () => {});
+      }
+    }
+
+    const keptCount = existingImages.length - toDelete.length;
+    const files = req.files || [];
+    if (files.length > 0) {
+      const values = files.map((f, idx) => [item.id, `/uploads/items/${f.filename}`, keptCount + idx]);
+      await pool.query('INSERT INTO item_images (item_id, file_path, sort_order) VALUES ?', [values]);
+    }
+  }
+
   const [updated] = await pool.query('SELECT * FROM items WHERE id = ?', [item.id]);
-  res.json(updated[0]);
+  const [finalImages] = await pool.query(
+    'SELECT file_path FROM item_images WHERE item_id = ? ORDER BY sort_order',
+    [item.id]
+  );
+  res.json({ ...updated[0], images: finalImages.map((r) => r.file_path) });
 });
 
 // DELETE /api/items/:id — owner only, only while Available

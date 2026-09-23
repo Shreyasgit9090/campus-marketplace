@@ -12,5 +12,6 @@ export const getItem = (id) => api.get(`/items/${id}`).then((r) => r.data);
 export const createItem = (formData) =>
   api.post('/items', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data);
 
-export const updateItem = (id, payload) => api.patch(`/items/${id}`, payload).then((r) => r.data);
+export const updateItem = (id, formData) =>
+  api.patch(`/items/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data);
 export const deleteItem = (id) => api.delete(`/items/${id}`);

@@ -12,7 +12,7 @@ router.get('/mine', authenticate, ctrl.listMyItems);
 router.get('/', ctrl.listItems);
 router.get('/:id', ctrl.getItem);
 router.post('/', authenticate, uploadItemImages.array('images', 6), ctrl.createItem);
-router.patch('/:id', authenticate, ctrl.updateItem);
+router.patch('/:id', authenticate, uploadItemImages.array('images', 6), ctrl.updateItem);
 router.delete('/:id', authenticate, ctrl.deleteItem);
 
 module.exports = router;

@@ -12,14 +12,18 @@ import * as ordersApi from '../../api/orders';
 export default function MyListings() {
   const [items, setItems] = useState(null);
   const [activeOrderByItem, setActiveOrderByItem] = useState({});
+  const [completedOrderByItem, setCompletedOrderByItem] = useState({});
 
   const load = useCallback(async () => {
     const [myItems, sellingOrders] = await Promise.all([itemsApi.listMyItems(), ordersApi.listSellingOrders()]);
-    const map = {};
+    const active = {};
+    const completed = {};
     for (const order of sellingOrders) {
-      if (order.status === 'Reserved') map[order.item_id] = order.id;
+      if (order.status === 'Reserved') active[order.item_id] = order.id;
+      if (order.status === 'Completed') completed[order.item_id] = order.id;
     }
-    setActiveOrderByItem(map);
+    setActiveOrderByItem(active);
+    setCompletedOrderByItem(completed);
     setItems(myItems);
   }, []);
 
@@ -63,7 +67,13 @@ export default function MyListings() {
           className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
         >
           {items.map((item) => (
-            <ListingCard key={item.id} item={item} activeOrderId={activeOrderByItem[item.id]} onChanged={load} />
+            <ListingCard
+              key={item.id}
+              item={item}
+              activeOrderId={activeOrderByItem[item.id]}
+              completedOrderId={completedOrderByItem[item.id]}
+              onChanged={load}
+            />
           ))}
         </motion.div>
       )}

@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { ArrowLeft, ImageOff, ShoppingBag, User } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, User } from 'lucide-react';
 import AppLayout from '../../layouts/AppLayout';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import Stars from '../../components/ui/Stars';
 import ConfirmDialog from '../../components/ui/ConfirmDialog';
+import SmartImage from '../../components/ui/SmartImage';
 import { SkeletonLine } from '../../components/ui/Skeleton';
 import * as itemsApi from '../../api/items';
 import * as ordersApi from '../../api/orders';
@@ -90,13 +91,12 @@ export default function ItemDetail() {
         >
           <div>
             <div className="aspect-square overflow-hidden rounded-3xl bg-neutral-100 card-shadow">
-              {item.images.length > 0 ? (
-                <img src={item.images[activeImage]} alt={item.name} className="size-full object-cover" />
-              ) : (
-                <div className="flex size-full items-center justify-center text-neutral-300">
-                  <ImageOff className="size-12" />
-                </div>
-              )}
+              <SmartImage
+                src={item.images[activeImage]}
+                alt={item.name}
+                className="size-full object-cover"
+                iconClassName="size-12"
+              />
             </div>
             {item.images.length > 1 && (
               <div className="mt-3 flex gap-2">
@@ -108,7 +108,7 @@ export default function ItemDetail() {
                       idx === activeImage ? 'border-brand-600' : 'border-transparent'
                     }`}
                   >
-                    <img src={src} alt="" className="size-full object-cover" />
+                    <SmartImage src={src} className="size-full object-cover" iconClassName="size-4" />
                   </button>
                 ))}
               </div>

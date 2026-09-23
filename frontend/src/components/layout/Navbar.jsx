@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, ChevronDown, LogOut, LayoutGrid } from 'lucide-react';
+import { ShoppingBag, ChevronDown, LogOut, LayoutGrid, User, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import useRole from '../../hooks/useRole';
+import NotificationBell from './NotificationBell';
 
 const navLinkClass = ({ isActive }) =>
   `rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
@@ -43,6 +44,8 @@ export default function Navbar() {
           ))}
         </nav>
 
+        <div className="flex items-center gap-2">
+        <NotificationBell />
         <div className="relative">
           <button
             onClick={() => setMenuOpen((o) => !o)}
@@ -67,12 +70,28 @@ export default function Navbar() {
                   className="absolute right-0 z-20 mt-2 w-48 overflow-hidden rounded-xl border border-neutral-200 bg-white py-1 card-shadow"
                 >
                   <Link
+                    to="/profile"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-2 px-3.5 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50"
+                  >
+                    <User className="size-4 text-neutral-400" /> Profile
+                  </Link>
+                  <Link
                     to="/role"
                     onClick={() => setMenuOpen(false)}
                     className="flex items-center gap-2 px-3.5 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50"
                   >
                     <LayoutGrid className="size-4 text-neutral-400" /> Switch role
                   </Link>
+                  {user?.is_admin ? (
+                    <Link
+                      to="/admin"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2 px-3.5 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50"
+                    >
+                      <ShieldCheck className="size-4 text-neutral-400" /> Admin
+                    </Link>
+                  ) : null}
                   <button
                     onClick={logout}
                     className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-sm text-red-600 hover:bg-red-50"
@@ -83,6 +102,7 @@ export default function Navbar() {
               </>
             )}
           </AnimatePresence>
+        </div>
         </div>
       </div>
     </header>

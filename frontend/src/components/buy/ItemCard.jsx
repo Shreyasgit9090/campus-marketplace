@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ImageOff } from 'lucide-react';
 import Badge from '../ui/Badge';
+import SmartImage from '../ui/SmartImage';
 
 export default function ItemCard({ item, className = '' }) {
   const cover = item.images?.[0];
@@ -13,17 +13,11 @@ export default function ItemCard({ item, className = '' }) {
         className="group block overflow-hidden rounded-2xl bg-white card-shadow transition-shadow hover:shadow-xl"
       >
         <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
-          {cover ? (
-            <img
-              src={cover}
-              alt={item.name}
-              className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-          ) : (
-            <div className="flex size-full items-center justify-center text-neutral-300">
-              <ImageOff className="size-8" />
-            </div>
-          )}
+          <SmartImage
+            src={cover}
+            alt={item.name}
+            className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
           {item.status && item.status !== 'Available' && (
             <div className="absolute left-2 top-2">
               <Badge status={item.status} />

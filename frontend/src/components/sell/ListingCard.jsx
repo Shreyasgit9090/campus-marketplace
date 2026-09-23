@@ -1,17 +1,21 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Pencil, Trash2, Ban, CheckCircle2, ImageOff, X, Save } from 'lucide-react';
+import { Pencil, Trash2, Ban, CheckCircle2, X, Save, Star } from 'lucide-react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import ConfirmDialog from '../ui/ConfirmDialog';
+import SmartImage from '../ui/SmartImage';
 import CategorySelect from './CategorySelect';
 import ConditionSelect from './ConditionSelect';
+import ImageDropzone from './ImageDropzone';
 import * as itemsApi from '../../api/items';
 import * as ordersApi from '../../api/orders';
 
-export default function ListingCard({ item, activeOrderId, onChanged }) {
+export default function ListingCard({ item, activeOrderId, completedOrderId, onChanged }) {
+  const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
   const [busy, setBusy] = useState(false);
   const [confirm, setConfirm] = useState(null); // 'delete' | 'cancel' | 'sold'
@@ -23,15 +27,18 @@ export default function ListingCard({ item, activeOrderId, onChanged }) {
     originalPrice: item.original_price,
     conditionTier: item.condition_tier,
   });
+  const [keptImages, setKeptImages] = useState(item.images || []);
+  const [newImages, setNewImages] = useState([]);
 
   const cover = item.images?.[0];
 
-  const runAction = async (fn, successMsg) => {
+  const runAction = async (fn, successMsg, after) => {
     setBusy(true);
     try {
-      await fn();
+      const result = await fn();
       toast.success(successMsg);
       onChanged();
+      after?.(result);
     } catch (err) {
       toast.error(err.response?.data?.error || 'Something went wrong');
     } finally {
@@ -43,14 +50,17 @@ export default function ListingCard({ item, activeOrderId, onChanged }) {
   const handleSaveEdit = async () => {
     setBusy(true);
     try {
-      await itemsApi.updateItem(item.id, {
-        category: form.category,
-        customCategory: form.category === 'Other' ? form.customCategory : undefined,
-        name: form.name,
-        description: form.description,
-        originalPrice: Number(form.originalPrice),
-        conditionTier: form.conditionTier,
-      });
+      const fd = new FormData();
+      fd.append('category', form.category);
+      if (form.category === 'Other') fd.append('customCategory', form.customCategory);
+      fd.append('name', form.name);
+      fd.append('description', form.description);
+      fd.append('originalPrice', form.originalPrice);
+      fd.append('conditionTier', form.conditionTier);
+      fd.append('keepImages', JSON.stringify(keptImages));
+      newImages.forEach((file) => fd.append('images', file));
+
+      await itemsApi.updateItem(item.id, fd);
       toast.success('Listing updated');
       setEditing(false);
       onChanged();
@@ -94,6 +104,28 @@ export default function ListingCard({ item, activeOrderId, onChanged }) {
             onChange={(e) => setForm({ ...form, originalPrice: e.target.value })}
           />
           <ConditionSelect value={form.conditionTier} onChange={(conditionTier) => setForm({ ...form, conditionTier })} />
+
+          {keptImages.length > 0 && (
+            <div>
+              <span className="mb-2 block text-sm font-medium text-neutral-700">Current photos</span>
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+                {keptImages.map((src) => (
+                  <div key={src} className="group relative aspect-square overflow-hidden rounded-lg bg-neutral-100">
+                    <SmartImage src={src} className="size-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setKeptImages((imgs) => imgs.filter((i) => i !== src))}
+                      className="absolute right-1 top-1 flex size-5 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                    >
+                      <X className="size-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          <ImageDropzone files={newImages} onChange={setNewImages} />
+
           <div className="flex gap-3">
             <Button variant="outline" onClick={() => setEditing(false)} disabled={busy}>
               Cancel
@@ -111,13 +143,7 @@ export default function ListingCard({ item, activeOrderId, onChanged }) {
     <>
       <motion.div layout className="overflow-hidden rounded-2xl bg-white card-shadow">
         <div className="relative aspect-[4/3] bg-neutral-100">
-          {cover ? (
-            <img src={cover} alt={item.name} className="size-full object-cover" />
-          ) : (
-            <div className="flex size-full items-center justify-center text-neutral-300">
-              <ImageOff className="size-8" />
-            </div>
-          )}
+          <SmartImage src={cover} alt={item.name} className="size-full object-cover" />
           <div className="absolute left-2 top-2">
             <Badge status={item.status} />
           </div>
@@ -162,9 +188,19 @@ export default function ListingCard({ item, activeOrderId, onChanged }) {
               </>
             )}
             {item.status === 'Sold' && (
-              <p className="text-xs text-neutral-400">
-                Sold {item.sold_at ? new Date(item.sold_at).toLocaleDateString() : ''}
-              </p>
+              <div className="flex w-full items-center justify-between">
+                <p className="text-xs text-neutral-400">
+                  Sold {item.sold_at ? new Date(item.sold_at).toLocaleDateString() : ''}
+                </p>
+                {completedOrderId && (
+                  <button
+                    onClick={() => navigate(`/orders/${completedOrderId}`)}
+                    className="flex items-center gap-1 text-xs font-semibold text-brand-700 hover:text-brand-800"
+                  >
+                    <Star className="size-3.5" /> Rate buyer
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -193,11 +229,15 @@ export default function ListingCard({ item, activeOrderId, onChanged }) {
       <ConfirmDialog
         open={confirm === 'sold'}
         title="Mark as sold?"
-        description="Confirm only after you've handed the item over and received payment."
+        description="Confirm only after you've handed the item over and received payment. You'll be able to rate the buyer next."
         confirmLabel="Mark sold"
         loading={busy}
         onCancel={() => setConfirm(null)}
-        onConfirm={() => runAction(() => ordersApi.completeOrder(activeOrderId), 'Marked as sold')}
+        onConfirm={() =>
+          runAction(() => ordersApi.completeOrder(activeOrderId), 'Marked as sold', () =>
+            navigate(`/orders/${activeOrderId}`)
+          )
+        }
       />
     </>
   );

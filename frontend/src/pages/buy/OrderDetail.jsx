@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Phone, ArrowLeft, Clock, Tag } from 'lucide-react';
+import { CheckCircle2, Phone, ArrowLeft, Clock, Tag, Star, Flag } from 'lucide-react';
 import AppLayout from '../../layouts/AppLayout';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
+import RatingDialog from '../../components/ui/RatingDialog';
+import ReportDialog from '../../components/ui/ReportDialog';
 import * as ordersApi from '../../api/orders';
 import { useAuth } from '../../context/AuthContext';
 
@@ -21,6 +23,9 @@ export default function OrderDetail() {
   const { user } = useAuth();
   const [order, setOrder] = useState(null);
   const [notFound, setNotFound] = useState(false);
+  const [rateOpen, setRateOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [rated, setRated] = useState(false);
 
   useEffect(() => {
     ordersApi
@@ -41,6 +46,10 @@ export default function OrderDetail() {
       </AppLayout>
     );
   }
+
+  const viewerIsBuyer = order && user?.id === order.buyer_id;
+  const counterpartyId = order && (viewerIsBuyer ? order.seller_id : order.buyer_id);
+  const counterpartyName = order && (viewerIsBuyer ? order.seller_name : order.buyer_name);
 
   return (
     <AppLayout>
@@ -96,11 +105,9 @@ export default function OrderDetail() {
               <div className="mt-4 flex items-center justify-between rounded-2xl border border-brand-100 bg-brand-50 p-4 text-left">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">
-                    {user?.id === order.buyer_id ? 'Seller' : 'Buyer'} contact
+                    {viewerIsBuyer ? 'Seller' : 'Buyer'} contact
                   </p>
-                  <p className="font-display text-lg font-bold text-brand-900">
-                    {user?.id === order.buyer_id ? order.seller_name : order.buyer_name}
-                  </p>
+                  <p className="font-display text-lg font-bold text-brand-900">{counterpartyName}</p>
                 </div>
                 <a
                   href={`tel:${order.counterpartyPhone}`}
@@ -111,11 +118,48 @@ export default function OrderDetail() {
               </div>
             )}
 
+            {order.status === 'Completed' && !rated && (
+              <Button className="mt-4" onClick={() => setRateOpen(true)}>
+                <Star className="size-4" /> Rate {counterpartyName}
+              </Button>
+            )}
+            {order.status === 'Completed' && rated && (
+              <p className="mt-4 text-sm font-medium text-status-available">You rated this order. Thanks!</p>
+            )}
+
+            <button
+              onClick={() => setReportOpen(true)}
+              className="mx-auto mt-4 flex items-center gap-1.5 text-xs text-neutral-400 hover:text-red-500"
+            >
+              <Flag className="size-3" /> Report {counterpartyName}
+            </button>
+
             <div className="mt-6 flex items-center justify-center gap-1.5 text-xs text-neutral-400">
               <Tag className="size-3" /> Order #{order.id}
             </div>
           </div>
         </motion.div>
+      )}
+
+      {order && (
+        <>
+          <RatingDialog
+            open={rateOpen}
+            orderId={order.id}
+            revieweeName={counterpartyName}
+            onClose={() => setRateOpen(false)}
+            onDone={() => {
+              setRated(true);
+              setRateOpen(false);
+            }}
+          />
+          <ReportDialog
+            open={reportOpen}
+            reportedUserId={counterpartyId}
+            reportedUserName={counterpartyName}
+            onClose={() => setReportOpen(false)}
+          />
+        </>
       )}
     </AppLayout>
   );
