@@ -3,23 +3,26 @@ import { Link, NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, ChevronDown, LogOut, LayoutGrid } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import useRole from '../../hooks/useRole';
 
 const navLinkClass = ({ isActive }) =>
   `rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
     isActive ? 'bg-brand-50 text-brand-700' : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900'
   }`;
 
-// Always the same set — any user can both buy and sell, so the nav doesn't
-// change based on which section they're currently in.
-const NAV_LINKS = [
+const BUY_LINKS = [
   { to: '/buy', label: 'Browse', end: true },
   { to: '/orders', label: 'My Orders' },
-  { to: '/sell', label: 'My Listings' },
+];
+const SELL_LINKS = [
+  { to: '/sell', label: 'My Listings', end: true },
   { to: '/sell/new', label: 'List an item' },
 ];
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const role = useRole();
+  const links = role === 'sell' ? SELL_LINKS : role === 'buy' ? BUY_LINKS : [];
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -33,7 +36,7 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
-          {NAV_LINKS.map((l) => (
+          {links.map((l) => (
             <NavLink key={l.to} to={l.to} end={l.end} className={navLinkClass}>
               {l.label}
             </NavLink>
