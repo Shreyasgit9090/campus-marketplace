@@ -36,6 +36,17 @@ async function sendOtpEmail(to, code, purpose) {
   const subject =
     purpose === 'signup' ? 'Verify your Campus Marketplace account' : 'Reset your Campus Marketplace password';
   const text = `Your one-time verification code is ${code}. It expires in ${process.env.OTP_EXPIRY_MINUTES || 10} minutes. If you didn't request this, ignore this email.`;
+
+  if (!getTransporter()) {
+    // No SMTP configured — this IS the delivery mechanism for local dev, so
+    // make it impossible to scroll past in a terminal full of morgan logs.
+    const line = '='.repeat(60);
+    console.log(
+      `\n${line}\n  OTP for ${to} (${purpose})\n  CODE: ${code}\n  Expires in ${process.env.OTP_EXPIRY_MINUTES || 10} minutes\n${line}\n`
+    );
+    return;
+  }
+
   await sendMail({ to, subject, text });
 }
 
