@@ -41,7 +41,7 @@ const getPublicProfile = asyncHandler(async (req, res) => {
 const getMyTransactions = asyncHandler(async (req, res) => {
   const [bought] = await pool.query(
     `SELECT o.id, o.item_id, o.item_price, o.status, o.reserved_at, o.completed_at,
-            i.name AS item_name, u.name AS seller_name
+            i.name AS item_name, u.id AS seller_id, u.name AS seller_name
      FROM orders o
      JOIN items i ON i.id = o.item_id
      JOIN users u ON u.id = o.seller_id
@@ -52,7 +52,7 @@ const getMyTransactions = asyncHandler(async (req, res) => {
 
   const [sold] = await pool.query(
     `SELECT o.id, o.item_id, o.item_price, o.status, o.reserved_at, o.completed_at,
-            i.name AS item_name, u.name AS buyer_name
+            i.name AS item_name, u.id AS buyer_id, u.name AS buyer_name
      FROM orders o
      JOIN items i ON i.id = o.item_id
      JOIN users u ON u.id = o.buyer_id

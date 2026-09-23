@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import AdminRoute from './components/AdminRoute'
 import Spinner from './components/ui/Spinner'
 import Landing from './pages/Landing'
 import RoleSelect from './pages/RoleSelect'
@@ -10,6 +11,8 @@ import BuyHome from './pages/buy/BuyHome'
 import ItemDetail from './pages/buy/ItemDetail'
 import MyOrders from './pages/buy/MyOrders'
 import OrderDetail from './pages/buy/OrderDetail'
+import Profile from './pages/Profile'
+import Admin from './pages/Admin'
 
 function Protected({ children }) {
   return <ProtectedRoute>{children}</ProtectedRoute>
@@ -32,6 +35,9 @@ export default function App() {
 
       <Route path="/orders" element={<Protected><MyOrders /></Protected>} />
       <Route path="/orders/:id" element={<Protected><OrderDetail /></Protected>} />
+
+      <Route path="/profile" element={<Protected><Profile /></Protected>} />
+      <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
 
       <Route path="*" element={<Landing />} />
     </Routes>
