@@ -9,7 +9,7 @@ const floatIcons = [
 ];
 
 const features = [
-  { Icon: ShieldCheck, text: 'Verified @msrit.edu.in accounts only' },
+  { Icon: ShieldCheck, text: 'Verified @msrit.edu accounts only' },
   { Icon: Handshake, text: 'Reserve an item, meet on campus, pay in person' },
   { Icon: Clock, text: 'Reservations auto-release after 48 hours' },
 ];

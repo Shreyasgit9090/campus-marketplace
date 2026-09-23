@@ -12,13 +12,13 @@ SELECT fn_compute_price(1000, 'New') AS new_price,
 
 SELECT '--- seed test users ---' AS step;
 INSERT INTO users (name, email, password_hash, phone, is_verified) VALUES
-  ('Seller One', 'seller1@msrit.edu.in', 'hash', '9000000001', 1),
-  ('Buyer One', 'buyer1@msrit.edu.in', 'hash', '9000000002', 1),
-  ('Buyer Two', 'buyer2@msrit.edu.in', 'hash', '9000000003', 1);
+  ('Seller One', 'seller1@msrit.edu', 'hash', '9000000001', 1),
+  ('Buyer One', 'buyer1@msrit.edu', 'hash', '9000000002', 1),
+  ('Buyer Two', 'buyer2@msrit.edu', 'hash', '9000000003', 1);
 
-SET @seller_id = (SELECT id FROM users WHERE email = 'seller1@msrit.edu.in');
-SET @buyer1_id = (SELECT id FROM users WHERE email = 'buyer1@msrit.edu.in');
-SET @buyer2_id = (SELECT id FROM users WHERE email = 'buyer2@msrit.edu.in');
+SET @seller_id = (SELECT id FROM users WHERE email = 'seller1@msrit.edu');
+SET @buyer1_id = (SELECT id FROM users WHERE email = 'buyer1@msrit.edu');
+SET @buyer2_id = (SELECT id FROM users WHERE email = 'buyer2@msrit.edu');
 
 SELECT '--- insert item, check trigger computed final_price (Good = 25% off 500 = 375.00) ---' AS step;
 INSERT INTO items (seller_id, category, name, description, original_price, condition_tier)
@@ -77,15 +77,15 @@ SELECT type, message FROM notifications WHERE related_id = @item2_id AND type = 
 
 SELECT '--- report auto-suspend test (threshold = 3, need > 3 pending reports) ---' AS step;
 INSERT INTO users (name, email, password_hash, is_verified) VALUES
-  ('Reporter A', 'rep_a@msrit.edu.in', 'hash', 1),
-  ('Reporter B', 'rep_b@msrit.edu.in', 'hash', 1),
-  ('Reporter C', 'rep_c@msrit.edu.in', 'hash', 1),
-  ('Reporter D', 'rep_d@msrit.edu.in', 'hash', 1);
+  ('Reporter A', 'rep_a@msrit.edu', 'hash', 1),
+  ('Reporter B', 'rep_b@msrit.edu', 'hash', 1),
+  ('Reporter C', 'rep_c@msrit.edu', 'hash', 1),
+  ('Reporter D', 'rep_d@msrit.edu', 'hash', 1);
 SET @bad_user = @buyer2_id;
-SET @rep_a = (SELECT id FROM users WHERE email = 'rep_a@msrit.edu.in');
-SET @rep_b = (SELECT id FROM users WHERE email = 'rep_b@msrit.edu.in');
-SET @rep_c = (SELECT id FROM users WHERE email = 'rep_c@msrit.edu.in');
-SET @rep_d = (SELECT id FROM users WHERE email = 'rep_d@msrit.edu.in');
+SET @rep_a = (SELECT id FROM users WHERE email = 'rep_a@msrit.edu');
+SET @rep_b = (SELECT id FROM users WHERE email = 'rep_b@msrit.edu');
+SET @rep_c = (SELECT id FROM users WHERE email = 'rep_c@msrit.edu');
+SET @rep_d = (SELECT id FROM users WHERE email = 'rep_d@msrit.edu');
 
 -- app layer always inserts reports one row at a time (parameterized query),
 -- never as INSERT...SELECT sourcing from users — that shape is what tripped

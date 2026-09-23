@@ -8,7 +8,7 @@ and more, reserve items, and complete handovers in person.
 - **Frontend:** React (Vite), Tailwind CSS v4, Framer Motion, React Router, Axios
 - **Backend:** Node.js + Express
 - **Database:** MySQL 8 (local instance)
-- **Auth:** JWT + bcrypt, with email OTP verification restricted to `@msrit.edu.in`
+- **Auth:** JWT + bcrypt, with email OTP verification restricted to `@msrit.edu`
 - **Images:** stored on disk under `backend/uploads/`, path saved in MySQL
 
 ## Project structure

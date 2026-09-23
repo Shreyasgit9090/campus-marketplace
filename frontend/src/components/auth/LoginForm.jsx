@@ -31,7 +31,7 @@ export default function LoginForm({ onNavigate }) {
         label="College email"
         type="email"
         icon={Mail}
-        placeholder="yourname@msrit.edu.in"
+        placeholder="yourname@msrit.edu"
         required
         value={form.email}
         onChange={(e) => setForm({ ...form, email: e.target.value })}

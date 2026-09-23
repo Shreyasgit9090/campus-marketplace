@@ -41,7 +41,7 @@ export default function ForgotEmailForm({ onNavigate, onSent }) {
         label="College email"
         type="email"
         icon={Mail}
-        placeholder="yourname@msrit.edu.in"
+        placeholder="yourname@msrit.edu"
         required
         value={email}
         onChange={(e) => setEmail(e.target.value)}

@@ -34,7 +34,7 @@ INSERT INTO app_settings (setting_key, setting_value) VALUES
 CREATE TABLE users (
   id             INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name           VARCHAR(100)  NOT NULL,
-  email          VARCHAR(150)  NOT NULL UNIQUE,   -- must end in @msrit.edu.in, enforced at app layer on signup
+  email          VARCHAR(150)  NOT NULL UNIQUE,   -- must end in @msrit.edu, enforced at app layer on signup
   password_hash  VARCHAR(255)  NOT NULL,
   phone          VARCHAR(20)   NULL,
   is_verified    TINYINT(1)    NOT NULL DEFAULT 0, -- flips to 1 after OTP verification
@@ -550,5 +550,5 @@ DELIMITER ;
 
 -- ============================================================================
 -- Seed: promote yourself to admin after you register through the app —
---   UPDATE users SET is_admin = 1 WHERE email = 'your.usn@msrit.edu.in';
+--   UPDATE users SET is_admin = 1 WHERE email = 'your.usn@msrit.edu';
 -- ============================================================================

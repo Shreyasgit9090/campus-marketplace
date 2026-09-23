@@ -6,7 +6,7 @@ const { createOtp, verifyOtp } = require('../utils/otp');
 const { sendOtpEmail } = require('../utils/mailer');
 const { signToken } = require('../utils/jwt');
 
-const COLLEGE_DOMAIN = () => (process.env.COLLEGE_EMAIL_DOMAIN || 'msrit.edu.in').toLowerCase();
+const COLLEGE_DOMAIN = () => (process.env.COLLEGE_EMAIL_DOMAIN || 'msrit.edu').toLowerCase();
 
 function assertCollegeEmail(email) {
   if (!email.toLowerCase().endsWith(`@${COLLEGE_DOMAIN()}`)) {
