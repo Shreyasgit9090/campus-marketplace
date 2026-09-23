@@ -15,14 +15,14 @@ app.get('/api/health', (req, res) => {
   res.json({ ok: true, service: 'campus-marketplace-backend' });
 });
 
-// Feature routes are mounted here as each is built:
-// app.use('/api/auth', require('./routes/auth.routes'));
-// app.use('/api/items', require('./routes/items.routes'));
-// app.use('/api/orders', require('./routes/orders.routes'));
-// app.use('/api/ratings', require('./routes/ratings.routes'));
-// app.use('/api/reports', require('./routes/reports.routes'));
-// app.use('/api/notifications', require('./routes/notifications.routes'));
-// app.use('/api/admin', require('./routes/admin.routes'));
+app.use('/api/auth', require('./routes/auth.routes'));
+app.use('/api/users', require('./routes/users.routes'));
+app.use('/api/items', require('./routes/items.routes'));
+app.use('/api/orders', require('./routes/orders.routes'));
+app.use('/api/ratings', require('./routes/ratings.routes'));
+app.use('/api/reports', require('./routes/reports.routes'));
+app.use('/api/notifications', require('./routes/notifications.routes'));
+app.use('/api/admin', require('./routes/admin.routes'));
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });
@@ -31,7 +31,8 @@ app.use((req, res) => {
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
+  const status = err.status || (err.name === 'MulterError' ? 400 : 500);
+  res.status(status).json({ error: err.message || 'Internal server error' });
 });
 
 module.exports = app;
