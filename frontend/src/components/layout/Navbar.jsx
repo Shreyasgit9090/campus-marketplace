@@ -33,7 +33,7 @@ export default function Navbar() {
           <span className="flex size-9 items-center justify-center rounded-xl bg-brand-700 text-white">
             <ShoppingBag className="size-4.5" />
           </span>
-          <span className="font-display text-lg font-bold text-neutral-900">Campus Marketplace</span>
+          <span className="font-display text-lg font-bold text-neutral-900">CampusCart</span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">

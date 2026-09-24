@@ -1,4 +1,4 @@
-# Campus Marketplace
+# CampusCart
 
 A peer-to-peer marketplace for MSRIT students to buy and sell textbooks,
 calculators, lab uniforms, notebooks, and lab records — reserve an item,
@@ -44,7 +44,7 @@ meet on campus, and hand it over in person.
 ## Project structure
 
 ```
-campus-marketplace/
+campuscart/
 ├── backend/
 │   ├── src/
 │   │   ├── config/       # MySQL pool
@@ -81,7 +81,7 @@ cp .env.example .env      # fill in DB_PASSWORD, JWT_SECRET, SMTP creds (see bel
 mysql -u root -p < database/schema.sql
 ```
 
-The schema creates its own `campus_marketplace` database, plus a MySQL
+The schema creates its own `campuscart` database, plus a MySQL
 `EVENT` (`ev_expire_reservations`) that auto-expires reservations every 15
 minutes. That requires the event scheduler to be on:
 
@@ -115,7 +115,7 @@ All of these live in `backend/.env` (copy `backend/.env.example` as a starting p
 | `SMTP_HOST`, `SMTP_PORT` | Defaults already set for Gmail (`smtp.gmail.com`, `587`) |
 | `SMTP_USER` | Your full Gmail address |
 | `SMTP_PASSWORD` | A **16-character Gmail App Password** — not your login password. Generate one at Google Account → Security → 2-Step Verification (must be on) → App passwords |
-| `SMTP_FROM` | Should match `SMTP_USER`'s address, e.g. `"Campus Marketplace <you@gmail.com>"` |
+| `SMTP_FROM` | Should match `SMTP_USER`'s address, e.g. `"CampusCart <you@gmail.com>"` |
 | `UPLOAD_DIR`, `MAX_UPLOAD_MB` | Local image storage settings |
 
 Leave `SMTP_USER`/`SMTP_PASSWORD` blank to skip real email entirely — OTP

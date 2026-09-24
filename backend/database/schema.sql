@@ -1,14 +1,14 @@
 -- ============================================================================
--- Campus Marketplace — MySQL schema
+-- CampusCart — MySQL schema
 -- MSRIT student marketplace: buy/sell listings, reservations, ratings, reports
 --
 -- Run with:  mysql -u root -p < schema.sql
 -- Requires event_scheduler for automatic reservation expiry — see bottom note.
 -- ============================================================================
 
-DROP DATABASE IF EXISTS campus_marketplace;
-CREATE DATABASE campus_marketplace CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE campus_marketplace;
+DROP DATABASE IF EXISTS campuscart;
+CREATE DATABASE campuscart CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE campuscart;
 
 -- ----------------------------------------------------------------------------
 -- app_settings — small key/value config table.

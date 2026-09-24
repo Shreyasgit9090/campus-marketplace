@@ -17,7 +17,7 @@ async function start() {
   }
 
   app.listen(PORT, () => {
-    console.log(`Campus Marketplace API listening on http://localhost:${PORT}`);
+    console.log(`CampusCart API listening on http://localhost:${PORT}`);
   });
 
   startExpireReservationsJob();

@@ -1,7 +1,7 @@
 {
-  "name": "campus-marketplace-backend",
+  "name": "campuscart-backend",
   "version": "1.0.0",
-  "description": "Backend API for Campus Marketplace (MSRIT student marketplace)",
+  "description": "Backend API for CampusCart (MSRIT student marketplace)",
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {

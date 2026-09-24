@@ -12,7 +12,7 @@ app.use(morgan('dev'));
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 app.get('/api/health', (req, res) => {
-  res.json({ ok: true, service: 'campus-marketplace-backend' });
+  res.json({ ok: true, service: 'campuscart-backend' });
 });
 
 app.use('/api/auth', require('./routes/auth.routes'));

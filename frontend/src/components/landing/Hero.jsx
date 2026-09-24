@@ -70,7 +70,7 @@ export default function Hero() {
         </motion.h1>
 
         <motion.p variants={item} className="mt-5 max-w-md text-brand-100/90 lg:text-lg">
-          Campus Marketplace is where MSRIT students trade textbooks, calculators,
+          CampusCart is where MSRIT students trade textbooks, calculators,
           lab uniforms, and more — peer to peer, at prices that make sense.
         </motion.p>
 

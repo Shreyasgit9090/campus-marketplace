@@ -2,7 +2,7 @@
 -- machine, rating aggregation, expiry sweep, and report auto-suspend.
 -- DESTRUCTIVE: truncates every table at the end. Never run against real data.
 --   mysql -u root -p < smoke_test.sql
-USE campus_marketplace;
+USE campuscart;
 
 SELECT '--- price function ---' AS step;
 SELECT fn_compute_price(1000, 'New') AS new_price,

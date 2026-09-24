@@ -45,7 +45,7 @@ async function sendMail({ to, subject, text }) {
 
 async function sendOtpEmail(to, code, purpose) {
   const subject =
-    purpose === 'signup' ? 'Verify your Campus Marketplace account' : 'Reset your Campus Marketplace password';
+    purpose === 'signup' ? 'Verify your CampusCart account' : 'Reset your CampusCart password';
   const text = `Your one-time verification code is ${code}. It expires in ${process.env.OTP_EXPIRY_MINUTES || 10} minutes. If you didn't request this, ignore this email.`;
 
   if (!getTransporter()) {

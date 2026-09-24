@@ -21,7 +21,7 @@ export default function VerifySignupForm({ email, onNavigate }) {
     try {
       const { token, user } = await authApi.verifyOtp({ email, code });
       applySession(token, user);
-      toast.success('Account verified — welcome to Campus Marketplace!');
+      toast.success('Account verified — welcome to CampusCart!');
     } catch (err) {
       toast.error(err.response?.data?.error || 'Verification failed');
     } finally {
