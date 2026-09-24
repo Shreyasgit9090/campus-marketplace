@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion';
 import { Calculator, BookOpen, Shirt, NotebookPen, ShieldCheck, Clock, Handshake, Sparkles } from 'lucide-react';
 
-// Anchored to the four corners with fixed offsets (not percentages) so
-// spacing stays constant — and non-overlapping — regardless of pane height,
-// instead of drifting together on shorter viewports.
+// One icon per corner, all at the same fixed inset, so the four form a
+// symmetric frame at any pane size. The pane's lg:py-28 reserves the top and
+// bottom bands they sit in, so the content and footer can't run into them.
+// Delays go clockwise so the bobbing ripples around the formation.
 const floatIcons = [
-  { Icon: Calculator, position: 'top-16 left-10', delay: 0 },
-  { Icon: BookOpen, position: 'bottom-28 left-8', delay: 0.4 },
-  { Icon: Shirt, position: 'top-28 right-10', delay: 0.8 },
-  { Icon: NotebookPen, position: 'bottom-16 right-14', delay: 1.2 },
+  { Icon: Calculator, position: 'top-10 left-10', delay: 0 },
+  { Icon: Shirt, position: 'top-10 right-10', delay: 0.4 },
+  { Icon: NotebookPen, position: 'bottom-10 right-10', delay: 0.8 },
+  { Icon: BookOpen, position: 'bottom-10 left-10', delay: 1.2 },
 ];
 
 const features = [
@@ -28,7 +29,7 @@ const item = {
 
 export default function Hero() {
   return (
-    <div className="relative flex min-h-[320px] flex-col justify-center overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-brand-950 px-6 py-16 lg:min-h-screen lg:px-16">
+    <div className="relative flex min-h-[320px] flex-col justify-center overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-brand-950 px-6 py-16 lg:min-h-screen lg:px-16 lg:py-28">
       {/* ambient glow */}
       <div className="pointer-events-none absolute -top-24 -left-24 size-96 rounded-full bg-brand-500/20 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 -right-16 size-96 rounded-full bg-accent-500/10 blur-3xl" />
@@ -90,13 +91,14 @@ export default function Hero() {
         </motion.ul>
       </motion.div>
 
+      {/* pinned in the bottom band, centred between the two bottom icons and level with them */}
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.6 }}
-        className="relative z-10 mt-10 hidden text-xs text-brand-200/60 lg:block"
+        className="absolute inset-x-0 bottom-[3.75rem] z-10 hidden text-center text-xs text-brand-200/60 lg:block"
       >
-        Made for MSRIT, by MSRIT.
+        Made for MSRIT, by Shreyas S G
       </motion.p>
     </div>
   );
